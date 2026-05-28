@@ -2,7 +2,7 @@
 title: Wiki Log
 type: log
 created: 2026-05-25
-updated: 2026-05-27
+updated: 2026-05-28
 ---
 
 # Wiki Log
@@ -40,3 +40,9 @@ Ingested `docs/plans/2026-05-07-s6-overlay-dynamic-subagent-gateways.md` as sour
 - Added `scripts/wiki_git_commit.py` — scoped commit/push for `wiki/`, `docs/simplemem/`, `docs/` markdown only.
 - **Excluded (manual verify):** `cocktail-party`, `marketing` (PostScript).
 - Wired into `nightly-simplemem`, `wiki-weekly-maintain`, and `nightly-self-improvement` (wiki/SimpleMem only; code stays uncommitted).
+
+## [2026-05-28] session | Nightly self-improvement
+
+- Preflight: `ai-memory-nightly-reindex` failed at 03:00 (psql not on cron PATH); script already patched with Homebrew PATH + `$PSQL` guard — manual rerun indexed 26 repos OK.
+- Recurring copilot-acp 300s stale timeouts on large cron prompts (~12k tokens); one run hit wrong path `/Users/thedao/scripts/maintain_project_knowledge.py` — use absolute path under `~/.hermes/hermes-agent/scripts/`.
+- `maintain_project_knowledge.py`: wiki lint OK, synced 5 log entries. Curator deferred (7d interval, 0 stale).

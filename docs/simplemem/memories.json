@@ -356,5 +356,125 @@
     },
     "namespace": "hermes-agent",
     "timestamp": 1779964263.9512
+  },
+  {
+    "id": "local_1779984217588",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984217.588046
+  },
+  {
+    "id": "local_1779984217588",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984217.5884511
+  },
+  {
+    "id": "local_1779984217588",
+    "text": "Wiki maintain: Scheduled wiki automation (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984217.588734
+  },
+  {
+    "id": "local_1779984217589",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984217.5890088
+  },
+  {
+    "id": "local_1779984217589",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984217.589304
+  },
+  {
+    "id": "local_1779984422141",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984422.141514
+  },
+  {
+    "id": "local_1779984422141",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984422.1418922
+  },
+  {
+    "id": "local_1779984422142",
+    "text": "Wiki maintain: Scheduled wiki automation (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984422.142199
+  },
+  {
+    "id": "local_1779984422142",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984422.142507
+  },
+  {
+    "id": "local_1779984422142",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779984422.142808
   }
 ]
