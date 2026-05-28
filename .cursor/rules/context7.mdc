@@ -1,0 +1,15 @@
+---
+description: Use Context7 for current framework, SDK, and API docs
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Context7
+
+Use Context7 when implementing or debugging framework, SDK, CLI, or API-specific behavior.
+
+- Prefer pre-resolved IDs in `.cursor/context7-libraries.md`.
+- If an ID is missing, resolve it first, then update `.cursor/context7-libraries.md` when the dependency becomes part of the project.
+- Keep lookups focused: ask specific questions and usually limit to about three Context7 calls per task.
+- Do not send secrets, credentials, or private payloads to documentation tools.
