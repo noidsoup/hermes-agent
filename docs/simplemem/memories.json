@@ -1,0 +1,360 @@
+[
+  {
+    "id": "local_1779769658469",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769658.4697092
+  },
+  {
+    "id": "local_1779769658469",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769658.469826
+  },
+  {
+    "id": "local_1779769749742",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769749.742143
+  },
+  {
+    "id": "local_1779769749742",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769749.7426078
+  },
+  {
+    "id": "local_1779769752398",
+    "text": "Bootstrapped wiki and SimpleMem. Hermes memory=profile facts; wiki=architecture; SimpleMem=repo summaries. Maintain via scripts/maintain_project_knowledge.py and nightly-self-improvement cron.",
+    "metadata": {
+      "type": "bootstrap",
+      "date": "2026-05-25"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769752.398797
+  },
+  {
+    "id": "local_1779769799912",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769799.912194
+  },
+  {
+    "id": "local_1779769799912",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769799.912448
+  },
+  {
+    "id": "local_1779769812923",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769812.923769
+  },
+  {
+    "id": "local_1779769812924",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779769812.924277
+  },
+  {
+    "id": "local_1779786085762",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779786085.7624278
+  },
+  {
+    "id": "local_1779786085762",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779786085.7626328
+  },
+  {
+    "id": "local_1779791459712",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_all_simplemem"
+    },
+    "namespace": "my-project",
+    "timestamp": 1779791459.71255
+  },
+  {
+    "id": "local_1779791459763",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779791459.7630389
+  },
+  {
+    "id": "local_1779791459763",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779791459.763278
+  },
+  {
+    "id": "local_1779791459763",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779791459.763445
+  },
+  {
+    "id": "local_1779872485884",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779872485.884137
+  },
+  {
+    "id": "local_1779872485884",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779872485.884418
+  },
+  {
+    "id": "local_1779872485884",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779872485.8846269
+  },
+  {
+    "id": "local_1779877844873",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_all_simplemem"
+    },
+    "namespace": "my-project",
+    "timestamp": 1779877844.873492
+  },
+  {
+    "id": "local_1779877844922",
+    "text": "Wiki create: Wiki bootstrapped (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779877844.922561
+  },
+  {
+    "id": "local_1779877844922",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779877844.922848
+  },
+  {
+    "id": "local_1779877844923",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779877844.92305
+  },
+  {
+    "id": "local_1779877844923",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779877844.9232378
+  },
+  {
+    "id": "local_1779964263853",
+    "text": "Wiki maintain: Scheduled wiki automation (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_all_simplemem"
+    },
+    "namespace": "my-project",
+    "timestamp": 1779964263.8534532
+  },
+  {
+    "id": "local_1779964263900",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_all_simplemem"
+    },
+    "namespace": "my-project",
+    "timestamp": 1779964263.900665
+  },
+  {
+    "id": "local_1779964263950",
+    "text": "Wiki migrate: docs/plans partial ingest (2026-05-25)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-25",
+      "verb": "migrate",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779964263.950315
+  },
+  {
+    "id": "local_1779964263950",
+    "text": "Wiki session: Nightly self-improvement (2026-05-26)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-26",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779964263.95059
+  },
+  {
+    "id": "local_1779964263950",
+    "text": "Wiki maintain: Scheduled wiki automation (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779964263.950805
+  },
+  {
+    "id": "local_1779964263951",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779964263.9510021
+  },
+  {
+    "id": "local_1779964263951",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1779964263.9512
+  }
+]
