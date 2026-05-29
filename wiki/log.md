@@ -46,3 +46,10 @@ Ingested `docs/plans/2026-05-07-s6-overlay-dynamic-subagent-gateways.md` as sour
 - Preflight: `ai-memory-nightly-reindex` failed at 03:00 (psql not on cron PATH); script already patched with Homebrew PATH + `$PSQL` guard — manual rerun indexed 26 repos OK.
 - Recurring copilot-acp 300s stale timeouts on large cron prompts (~12k tokens); one run hit wrong path `/Users/thedao/scripts/maintain_project_knowledge.py` — use absolute path under `~/.hermes/hermes-agent/scripts/`.
 - `maintain_project_knowledge.py`: wiki lint OK, synced 5 log entries. Curator deferred (7d interval, 0 stale).
+
+## [2026-05-29] session | Nightly self-improvement
+
+- `ai-memory-nightly-reindex`: stale error (pre-`$PSQL` patch); manual rerun OK — 26 repos, 5751 chunks. Next 03:00 should pass with Homebrew `psql` guard.
+- `il-community-hunter`: 600s script cap; successful runs ~9–10 min. Raised `cron.script_timeout_seconds` to 900; wrapper defaults `IL_STATES_PER_RUN=1`, `IL_MAX_QUERIES=2`.
+- Nous API 401s in errors.log (portal credits); memory store at 2200-char cap — trim before adds.
+- `maintain_project_knowledge.py`: wiki lint OK, SimpleMem synced 5 entries. Curator deferred (7d interval).
