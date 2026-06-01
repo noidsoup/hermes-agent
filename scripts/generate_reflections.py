@@ -9,6 +9,7 @@ can be queried by scripts/query_memory_oracle.py.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -42,10 +43,15 @@ STABLE_CODE_FILES = (
     "toolsets.py",
     "model_tools.py",
     "hermes_constants.py",
+    "run_agent.py",
     "cron/jobs.py",
     "cron/scheduler.py",
     "tools/registry.py",
+    "tools/memory_oracle_tool.py",
     "hermes_cli/commands.py",
+    "scripts/generate_reflections.py",
+    "scripts/query_memory_oracle.py",
+    "scripts/maintain_memory_oracle.py",
 )
 
 
@@ -298,6 +304,36 @@ def _code_records(doc: SourceDoc) -> list[dict]:
     if names:
         answer = f"{stem} defines notable symbols: " + ", ".join(names[:20]) + "."
         records.append(_mk_record(f"What are the notable symbols in {rel}?", answer, [rel], "code-symbols"))
+    if doc.path.suffix == ".py":
+        try:
+            tree = ast.parse(text)
+        except SyntaxError:
+            return records
+        imports: list[str] = []
+        defs: list[str] = []
+        classes: list[str] = []
+        for node in tree.body:
+            if isinstance(node, ast.Import):
+                imports.extend(alias.name.split(".")[0] for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imports.append(node.module.split(".")[0])
+            elif isinstance(node, ast.FunctionDef):
+                defs.append(node.name)
+            elif isinstance(node, ast.ClassDef):
+                classes.append(node.name)
+        facts: list[str] = []
+        if classes:
+            facts.append("classes: " + ", ".join(classes[:12]))
+        if defs:
+            facts.append("functions: " + ", ".join(defs[:18]))
+        if imports:
+            facts.append("imports: " + ", ".join(sorted(set(imports))[:18]))
+        if facts:
+            records.append(_mk_record(f"How is {rel} structured?", "; ".join(facts) + ".", [rel], "code-structure"))
+        if "registry.register" in text:
+            tool_names = re.findall(r"registry\.register\(\s*name=[\"']([^\"']+)[\"']", text)
+            if tool_names:
+                records.append(_mk_record(f"Which Hermes tools does {rel} register?", f"{rel} registers tools: " + ", ".join(tool_names) + ".", [rel], "code-relations"))
     return records
 
 

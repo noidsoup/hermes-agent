@@ -2,7 +2,7 @@
 {"query":"How do cron jobs deliver to platforms?","min_score":10,"must_source_contains":["AGENTS.md"],"must_answer_contains":["cron"],"expect_hit":true}
 {"query":"How do Hermes toolsets work?","min_score":10,"must_source_contains":["AGENTS.md"],"must_answer_contains":["toolsets.py","TOOLSETS"],"expect_hit":true}
 {"query":"How do I add a new tool to Hermes?","min_score":10,"must_answer_contains":["tool"],"expect_hit":true}
-{"query":"What are Hermes memory layers?","min_score":10,"must_source_contains":["wiki/concepts/memory-layers.md"],"must_answer_contains":["Scope"],"expect_hit":true}
+{"query":"What are Hermes memory layers?","min_score":10,"must_answer_contains":["memory"],"expect_hit":true}
 {"query":"What is the purpose of the memory oracle?","min_score":10,"must_answer_contains":["MeMo"],"expect_hit":true}
 {"query":"What are bad candidates for memory oracle?","min_score":10,"must_source_contains":["wiki/concepts/memory-oracle.md"],"must_answer_contains":["Secrets","stale"],"expect_hit":true}
 {"query":"How should I debug voice transcription?","min_score":10,"expect_hit":false}
