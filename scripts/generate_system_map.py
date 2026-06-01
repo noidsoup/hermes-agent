@@ -8,6 +8,7 @@ import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 HERMES_HOME = Path.home() / ".hermes"
@@ -21,7 +22,7 @@ def _run(cmd: list[str], cwd: Path | None = None, timeout: int = 60) -> tuple[in
         return 1, str(exc)
 
 
-def _json_load(path: Path, default):
+def _json_load(path: Path, default: Any) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
@@ -33,6 +34,12 @@ def _count_jsonl(path: Path) -> int:
         return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
     except Exception:
         return 0
+
+
+def _display_schedule(schedule: Any) -> str:
+    if isinstance(schedule, dict):
+        return str(schedule.get("display") or schedule.get("expr") or schedule)
+    return str(schedule)
 
 
 def _cron_jobs() -> list[dict]:
@@ -91,12 +98,11 @@ def generate(repo: Path) -> str:
         "",
     ]
     for job in sorted(active, key=lambda j: j.get("name", "")):
-        lines.append(f"- `{job.get('name')}` — `{job.get('schedule')}` — deliver `{job.get('deliver')}` — script `{job.get('script', 'agent')}`")
-    lines.extend([
-        "",
-        "## Backup State",
-        "",
-    ])
+        lines.append(
+            f"- `{job.get('name')}` — `{_display_schedule(job.get('schedule'))}` — "
+            f"deliver `{job.get('deliver')}` — script `{job.get('script', 'agent')}`"
+        )
+    lines.extend(["", "## Backup State", ""])
     if bundles:
         for b in bundles:
             lines.append(f"- Local bundle: `{b}`")

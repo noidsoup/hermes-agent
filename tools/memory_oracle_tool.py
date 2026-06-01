@@ -99,7 +99,9 @@ def memory_oracle_query(
         }
 
     records = _load(memory)
-    matches = search(records, question, max(1, int(limit)), min_score=float(min_score))
+    safe_limit = max(1, min(20, int(limit)))
+    safe_min_score = max(0.0, float(min_score))
+    matches = search(records, question, safe_limit, min_score=safe_min_score)
     results: list[dict[str, Any]] = []
     for score, rec in matches:
         item = dict(rec)
@@ -113,7 +115,7 @@ def memory_oracle_query(
         "query": question,
         "repo": str(root),
         "memory_path": str(memory),
-        "min_score": min_score,
+        "min_score": safe_min_score,
         "no_hit": not results,
         "results": results,
     }

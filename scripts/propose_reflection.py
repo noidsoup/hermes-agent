@@ -12,8 +12,18 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VOLATILE_PATTERNS = [
-    r"\bcurrent\b", r"\btoday\b", r"\bopen PR\b", r"\bcommit [0-9a-f]{7,}\b",
-    r"\btoken\b", r"\bsecret\b", r"\bpassword\b", r"\bapi[_ -]?key\b",
+    r"\bcurrent\b",
+    r"\btoday\b",
+    r"\bopen PR\b",
+    r"\bcommit [0-9a-f]{7,}\b",
+    r"\btoken\b",
+    r"\bsecret\b",
+    r"\bpassword\b",
+    r"\bapi[_ -]?key\b",
+    r"sk-[A-Za-z0-9_-]{12,}",
+    r"gh[opsu]_[A-Za-z0-9_]{20,}",
+    r"github_pat_[A-Za-z0-9_]{20,}",
+    r"BEGIN [A-Z ]*PRIVATE KEY",
 ]
 
 
@@ -29,14 +39,32 @@ def _risk(text: str) -> list[str]:
     return hits
 
 
+def _validate_sources(repo: Path, sources: list[str]) -> tuple[list[str], list[str]]:
+    valid: list[str] = []
+    errors: list[str] = []
+    root = repo.resolve()
+    for source in sources:
+        if not source or Path(source).is_absolute():
+            errors.append(f"source must be repo-relative: {source!r}")
+            continue
+        resolved = (root / source).resolve()
+        if not str(resolved).startswith(str(root) + "/") and resolved != root:
+            errors.append(f"source escapes repo: {source!r}")
+            continue
+        valid.append(source)
+    return valid, errors
+
+
 def propose(repo: Path, question: str, answer: str, sources: list[str], approve: bool = False) -> dict:
-    text = question + "\n" + answer + "\n" + "\n".join(sources)
-    risks = _risk(text)
+    repo = repo.expanduser().resolve()
+    valid_sources, source_errors = _validate_sources(repo, sources)
+    text = question + "\n" + answer + "\n" + "\n".join(valid_sources)
+    risks = _risk(text) + source_errors
     rec = {
-        "id": _rid(question, sources),
+        "id": _rid(question, valid_sources),
         "question": question,
         "answer": answer,
-        "sources": sources,
+        "sources": valid_sources,
         "type": "candidate",
         "stability": "stable-candidate",
         "created_at": datetime.now(timezone.utc).date().isoformat(),

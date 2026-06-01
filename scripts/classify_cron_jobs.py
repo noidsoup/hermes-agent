@@ -7,6 +7,7 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 HERMES_HOME = Path.home() / ".hermes"
 
@@ -25,6 +26,12 @@ def _load_jobs() -> list[dict]:
     return []
 
 
+def _display_schedule(schedule: Any) -> str:
+    if isinstance(schedule, dict):
+        return str(schedule.get("display") or schedule.get("expr") or schedule)
+    return str(schedule)
+
+
 def classify(job: dict) -> dict:
     name = job.get("name", "")
     script = job.get("script") or ""
@@ -33,10 +40,10 @@ def classify(job: dict) -> dict:
     category = "ops"
     if "apfs" in hay or "airtable" in hay:
         category = "apfs"
-    elif "wiki" in hay or "memory" in hay or "simplemem" in hay or "ai-memory" in hay:
-        category = "knowledge"
     elif "health" in hay:
         category = "health"
+    elif "wiki" in hay or "memory" in hay or "simplemem" in hay or "ai-memory" in hay:
+        category = "knowledge"
     elif "pr-" in hay or "github" in hay:
         category = "github"
     elif "daily" in hay or "community" in hay:
@@ -54,7 +61,7 @@ def classify(job: dict) -> dict:
         side_effects.append("may touch GitHub")
     return {
         "name": name,
-        "schedule": job.get("schedule"),
+        "schedule": _display_schedule(job.get("schedule")),
         "deliver": job.get("deliver"),
         "script": script or "agent",
         "category": category,
