@@ -739,6 +739,21 @@ DEFAULT_CONFIG = {
     "model": "",
     "providers": {},
     "fallback_providers": [],
+    "model_routing": {
+        # Opt-in deterministic per-turn route selection.  Empty route dicts
+        # keep the current provider/model.  Explicit CLI --model/--provider
+        # always bypass this router.
+        "enabled": False,
+        "show_decisions": False,
+        "routes": {
+            "default": {},
+            "fast": {},
+            "coding": {},
+            "wiki": {},
+            "research": {},
+            "memory": {},
+        },
+    },
     "credential_pool_strategies": {},
     "toolsets": ["hermes-cli"],
     "agent": {

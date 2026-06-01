@@ -2953,6 +2953,8 @@ class HermesCLI:
         # Initialize Rich console
         self.console = Console()
         self.config = CLI_CONFIG
+        self._explicit_model_arg = bool(model)
+        self._explicit_provider_arg = bool(provider)
         self.compact = compact if compact is not None else CLI_CONFIG["display"].get("compact", False)
         # tool_progress: "off", "new", "all", "verbose" (from config.yaml display section)
         # YAML 1.1 parses bare `off` as boolean False — normalise to string.
@@ -4803,10 +4805,10 @@ class HermesCLI:
     def _resolve_turn_agent_config(self, user_message: str) -> dict:
         """Build the effective model/runtime config for a single user turn.
 
-        Always uses the session's primary model/provider.  If the user has
-        toggled `/fast` on and the current model supports Priority
-        Processing / Anthropic fast mode, attach `request_overrides` so the
-        API call is marked accordingly.
+        Uses the session's primary model/provider unless opt-in deterministic
+        model routing selects a configured per-turn route.  If the user passed
+        an explicit CLI model/provider, that explicit choice remains
+        authoritative and auto-routing is bypassed.
         """
         from hermes_cli.models import resolve_fast_mode_overrides
 
@@ -4819,17 +4821,66 @@ class HermesCLI:
             "args": list(self.acp_args or []),
             "credential_pool": getattr(self, "_credential_pool", None),
         }
+        effective_model = self.model
+        route_meta = None
+
+        try:
+            from agent.model_router import resolve_model_route
+
+            decision = resolve_model_route(
+                user_message,
+                CLI_CONFIG,
+                current_provider=self.provider,
+                current_model=self.model,
+                explicit_model=getattr(self, "_explicit_model_arg", False),
+                explicit_provider=getattr(self, "_explicit_provider_arg", False),
+            )
+            route_meta = {
+                "enabled": decision.enabled,
+                "route": decision.route,
+                "reason": decision.reason,
+                "provider": decision.provider,
+                "model": decision.model,
+                "source": decision.source,
+            }
+            if decision.enabled and (decision.provider != self.provider or decision.model != self.model):
+                try:
+                    from hermes_cli.runtime_provider import resolve_runtime_provider
+
+                    resolved = resolve_runtime_provider(
+                        requested=decision.provider or None,
+                        target_model=decision.model or None,
+                    )
+                    runtime = {
+                        "api_key": resolved.get("api_key"),
+                        "base_url": resolved.get("base_url"),
+                        "provider": resolved.get("provider") or decision.provider,
+                        "api_mode": resolved.get("api_mode"),
+                        "command": resolved.get("command"),
+                        "args": list(resolved.get("args") or []),
+                        "credential_pool": resolved.get("credential_pool", getattr(self, "_credential_pool", None)),
+                    }
+                    effective_model = decision.model or self.model
+                    route_meta["resolved"] = True
+                except Exception as exc:
+                    logging.warning("model routing fallback to current route after runtime resolution failed: %s", exc)
+                    route_meta["resolved"] = False
+                    route_meta["error"] = str(exc)
+        except Exception as exc:
+            logging.debug("model routing skipped after decision failure: %s", exc)
+
         route = {
-            "model": self.model,
+            "model": effective_model,
             "runtime": runtime,
             "signature": (
-                self.model,
+                effective_model,
                 runtime["provider"],
                 runtime["base_url"],
                 runtime["api_mode"],
                 runtime["command"],
                 tuple(runtime["args"]),
             ),
+            "model_route": route_meta,
         }
 
         service_tier = getattr(self, "service_tier", None)
@@ -11923,6 +11974,18 @@ class HermesCLI:
         # Initialize agent if needed
         if self.agent is None:
             _cprint(f"{_DIM}Initializing agent...{_RST}")
+        route_meta = turn_route.get("model_route") or {}
+        routing_cfg = CLI_CONFIG.get("model_routing", {}) if isinstance(CLI_CONFIG, dict) else {}
+        if (
+            isinstance(routing_cfg, dict)
+            and routing_cfg.get("show_decisions")
+            and route_meta.get("enabled")
+            and route_meta.get("resolved")
+        ):
+            _cprint(
+                f"{_DIM}  route: {route_meta.get('route')} -> "
+                f"{turn_route['runtime'].get('provider')}/{turn_route['model']}{_RST}"
+            )
         if not self._init_agent(
             model_override=turn_route["model"],
             runtime_override=turn_route["runtime"],
