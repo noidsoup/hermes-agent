@@ -30,6 +30,7 @@ updated: 2026-05-25
 | Page | Summary |
 |------|---------|
 | [[concepts/memory-layers]] | Hermes memory vs SimpleMem vs wiki vs skills |
+| [[concepts/memory-oracle]] | MeMo-inspired reflection QA memory layer |
 
 ## Decisions
 
