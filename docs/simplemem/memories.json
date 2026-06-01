@@ -908,5 +908,77 @@
     },
     "namespace": "hermes-agent",
     "timestamp": 1780223461.4232059
+  },
+  {
+    "id": "local_1780309845720",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_all_simplemem"
+    },
+    "namespace": "my-project",
+    "timestamp": 1780309845.7207592
+  },
+  {
+    "id": "local_1780309845773",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780309845.773164
+  },
+  {
+    "id": "local_1780309845773",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780309845.773707
+  },
+  {
+    "id": "local_1780309845774",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780309845.774123
+  },
+  {
+    "id": "local_1780309845774",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780309845.77453
+  },
+  {
+    "id": "local_1780309845774",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780309845.774931
   }
 ]

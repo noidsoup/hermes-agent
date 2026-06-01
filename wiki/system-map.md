@@ -1,14 +1,14 @@
 ---
 title: Hermes System Map
 type: report
-updated: 2026-05-31T20:58:31
+updated: 2026-06-01T03:15:29
 ---
 
 # Hermes System Map
 
-Generated: `2026-05-31T20:58:31`
+Generated: `2026-06-01T03:15:29`
 Repo: `/Users/thedao/.hermes/hermes-agent`
-Git head: `5402a9946 feat: operationalize Hermes memory system upgrades`
+Git head: `54e04c801 fix: make GitHub intelligence collection resumable`
 
 ## Memory Layers
 
@@ -23,7 +23,7 @@ Git head: `5402a9946 feat: operationalize Hermes memory system upgrades`
 
 - Reflections: `399`
 - Health: `True`
-- Last checked: `2026-05-31T20:58:31`
+- Last checked: `2026-06-01T03:15:29`
 - Eval summary: `memory oracle evals: 8/8 passed`
 - Rule: use for stable conceptual orientation; verify important/current claims with sources/tools.
 
@@ -54,8 +54,9 @@ Git head: `5402a9946 feat: operationalize Hermes memory system upgrades`
 
 ## Backup State
 
-- Local bundle: `/Users/thedao/.hermes/backups/git/hermes-agent-system-upgrades-5402a9946-20260531-205048.bundle`
-- Local bundle: `/Users/thedao/.hermes/backups/git/hermes-agent-memory-oracle-e45e459d0-20260531-181508.bundle`
+- Local bundle: `/Users/thedao/.hermes/backups/git/hermes-agent-github-intelligence-resume-54e04c801-20260531-215330.bundle`
+- Local bundle: `/Users/thedao/.hermes/backups/git/hermes-agent-github-intelligence-10983cde1-20260531-213134.bundle`
+- Local bundle: `/Users/thedao/.hermes/backups/git/hermes-agent-audit-hardening-36efc6097-20260531-205853.bundle`
 
 ## Operating Principles
 
