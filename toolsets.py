@@ -47,7 +47,7 @@ _HERMES_CORE_TOOLS = [
     # Text-to-speech
     "text_to_speech",
     # Planning & memory
-    "todo", "memory", "memory_oracle_query",
+    "todo", "memory", "memory_oracle_query", "github_history_query",
     # Session history search
     "session_search",
     # Clarifying questions
@@ -225,6 +225,12 @@ TOOLSETS = {
     "memory_oracle": {
         "description": "Repo-local MeMo-style reflection memory oracle for stable project knowledge",
         "tools": ["memory_oracle_query"],
+        "includes": []
+    },
+
+    "github_history": {
+        "description": "Read-only search over Nicholas's local GitHub intelligence vault",
+        "tools": ["github_history_query"],
         "includes": []
     },
     
