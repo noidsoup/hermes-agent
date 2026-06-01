@@ -6,6 +6,14 @@ Instructions for AI coding assistants and developers working on the hermes-agent
 
 ## Development Environment
 
+For stable repo/project knowledge questions, use the memory oracle before broad file search when available:
+
+```bash
+python3 scripts/query_memory_oracle.py "How does Hermes cron work?" --min-score 10 --verify-sources
+```
+
+Agents should treat oracle answers as orientation, not final authority. Verify high-risk or current-state claims against listed sources or live tools. Do not query the oracle for volatile facts like current cron status, open PRs, logs, Airtable records, git status, or secrets.
+
 ```bash
 # Prefer .venv; fall back to venv if that's what your checkout has.
 source .venv/bin/activate   # or: source venv/bin/activate

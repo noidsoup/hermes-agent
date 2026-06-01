@@ -47,7 +47,7 @@ _HERMES_CORE_TOOLS = [
     # Text-to-speech
     "text_to_speech",
     # Planning & memory
-    "todo", "memory",
+    "todo", "memory", "memory_oracle_query",
     # Session history search
     "session_search",
     # Clarifying questions
@@ -219,6 +219,12 @@ TOOLSETS = {
     "context_engine": {
         "description": "Runtime tools exposed by the active context engine",
         "tools": [],
+        "includes": []
+    },
+
+    "memory_oracle": {
+        "description": "Repo-local MeMo-style reflection memory oracle for stable project knowledge",
+        "tools": ["memory_oracle_query"],
         "includes": []
     },
     

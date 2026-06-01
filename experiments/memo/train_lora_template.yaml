@@ -1,0 +1,14 @@
+# Example-only LoRA config. Do not run without explicit user approval.
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+method: lora
+dataset:
+  train: experiments/memo/dataset/reflections_train.jsonl
+  eval: experiments/memo/dataset/reflections_eval.jsonl
+training:
+  batch_size: 2
+  iters: 200
+  learning_rate: 0.0001
+safety:
+  require_secret_scan: true
+  require_retrieval_baseline_pass: true
+  keep_source_verification: true

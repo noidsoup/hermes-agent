@@ -19,6 +19,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 GENERATOR = REPO_ROOT / "scripts" / "generate_reflections.py"
 EVAL_RUNNER = REPO_ROOT / "scripts" / "eval_memory_oracle.py"
 REFLECTIONS = REPO_ROOT / "wiki" / "memory" / "reflections.jsonl"
+HEALTH_PATH = REPO_ROOT / "wiki" / "memory" / "health.json"
+SYSTEM_MAP = REPO_ROOT / "wiki" / "system-map.md"
 STATE_PATH = Path.home() / ".hermes" / "state" / "memory_oracle_maintenance.json"
 
 
@@ -82,18 +84,29 @@ def maintain(max_records: int, include_website: bool, min_records: int, commit: 
     eval_run = _run([sys.executable, str(EVAL_RUNNER), "--repo", str(REPO_ROOT)], timeout=120)
     ok = gen.returncode == 0 and eval_run.returncode == 0 and after_count >= min_records
 
+    eval_summary = eval_run.stdout.strip().splitlines()[-1] if eval_run.stdout.strip() else "unknown"
     state = {
         "checked_at": datetime.now().isoformat(timespec="seconds"),
         "ok": ok,
         "changed": changed,
         "before_count": before_count,
         "after_count": after_count,
+        "candidate_count": _count_jsonl(REPO_ROOT / "wiki" / "memory" / "candidates.jsonl"),
+        "approved_count": _count_jsonl(REPO_ROOT / "wiki" / "memory" / "approved.jsonl"),
+        "rejected_count": _count_jsonl(REPO_ROOT / "wiki" / "memory" / "rejected.jsonl"),
         "before_hash": before_hash,
         "after_hash": after_hash,
         "generator_returncode": gen.returncode,
         "eval_returncode": eval_run.returncode,
+        "eval_summary": eval_summary,
     }
+    HEALTH_PATH.parent.mkdir(parents=True, exist_ok=True)
+    HEALTH_PATH.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     _write_state(state)
+
+    system_map_run = _run([sys.executable, str(REPO_ROOT / "scripts" / "generate_system_map.py"), "--repo", str(REPO_ROOT), "--output", str(SYSTEM_MAP)], timeout=60)
+    if system_map_run.returncode != 0:
+        ok = False
 
     lines: list[str] = []
     if not ok:
@@ -105,6 +118,8 @@ def maintain(max_records: int, include_website: bool, min_records: int, commit: 
             (gen.stdout + gen.stderr).strip()[:1200],
             f"eval rc: {eval_run.returncode}",
             (eval_run.stdout + eval_run.stderr).strip()[:1600],
+            f"system map rc: {system_map_run.returncode}",
+            (system_map_run.stdout + system_map_run.stderr).strip()[:800],
         ])
     elif changed or verbose:
         lines.extend([

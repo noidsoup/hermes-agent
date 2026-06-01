@@ -101,7 +101,19 @@ def search(records: list[dict], query: str, limit: int, min_score: float = 0.0) 
     return ranked[:limit]
 
 
-def _print_text(results: list[tuple[float, dict]]) -> None:
+def verify_result_sources(rec: dict, repo: Path) -> list[dict]:
+    checks: list[dict] = []
+    for source in rec.get("sources") or []:
+        source_path = repo / source
+        checks.append({
+            "source": source,
+            "exists": source_path.exists(),
+            "path": str(source_path),
+        })
+    return checks
+
+
+def _print_text(results: list[tuple[float, dict]], repo: Path | None = None, verify_sources: bool = False) -> None:
     if not results:
         print("No matching reflections found.")
         return
@@ -111,6 +123,10 @@ def _print_text(results: list[tuple[float, dict]]) -> None:
         sources = rec.get("sources") or []
         if sources:
             print("Sources: " + ", ".join(sources))
+        if verify_sources and repo is not None:
+            checks = verify_result_sources(rec, repo)
+            ok = sum(1 for item in checks if item["exists"])
+            print(f"Source verification: {ok}/{len(checks)} found")
         print(f"Type: {rec.get('type', '?')} · Stability: {rec.get('stability', '?')} · ID: {rec.get('id')}")
         print()
 
@@ -123,6 +139,7 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--min-score", type=float, default=0.0, help="Suppress matches below this score")
     parser.add_argument("--json", action="store_true", help="Emit JSON")
+    parser.add_argument("--verify-sources", action="store_true", help="Check whether result source files currently exist")
     args = parser.parse_args()
 
     repo = Path(args.repo).expanduser().resolve()
@@ -132,10 +149,15 @@ def main() -> int:
     records = _load(memory)
     results = search(records, args.query, args.limit, min_score=args.min_score)
     if args.json:
-        payload = [dict(score=score, **rec) for score, rec in results]
+        payload = []
+        for score, rec in results:
+            item = dict(score=score, **rec)
+            if args.verify_sources:
+                item["source_verification"] = verify_result_sources(rec, repo)
+            payload.append(item)
         print(json.dumps(payload, indent=2, ensure_ascii=False))
     else:
-        _print_text(results)
+        _print_text(results, repo=repo, verify_sources=args.verify_sources)
     return 0
 
 
