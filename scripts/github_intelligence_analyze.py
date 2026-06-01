@@ -17,12 +17,16 @@ def read_jsonl(path: Path) -> list[dict]:
     if not path.exists():
         return []
     rows = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError:
-                pass
+    # Iterate physical file lines instead of str.splitlines(); JSON strings can
+    # legally contain unicode line separators that splitlines() treats as record
+    # boundaries, which would silently drop valid JSONL records.
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                try:
+                    rows.append(json.loads(line))
+                except json.JSONDecodeError:
+                    pass
     return rows
 
 
@@ -130,6 +134,41 @@ def write_dormant(reports: Path, repos: list[dict]) -> None:
     (reports / "dormant-projects.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_commit_history(reports: Path, commits: list[dict]) -> None:
+    by_year = Counter(year(c.get("committed_at") or c.get("authored_at")) for c in commits)
+    by_repo = Counter(c.get("repo") or "unknown" for c in commits)
+    by_author = Counter((c.get("author_email") or "unknown").lower() for c in commits)
+    remote_reachable = sum(1 for c in commits if any("/" in ref and not ref.startswith("tags/") for ref in (c.get("refs") or [])))
+    local_only = len(commits) - remote_reachable
+    lines = [
+        "# GitHub Commit History",
+        "",
+        f"Generated: `{datetime.now(timezone.utc).isoformat()}`",
+        "",
+        "## Summary",
+        "",
+        f"- Commit records: `{len(commits)}`",
+        f"- Remote-ref reachable records: `{remote_reachable}`",
+        f"- Local-only/tag-only/no-ref records: `{local_only}`",
+        "",
+        "## Commits by Year",
+        "",
+    ]
+    for y, c in sorted(by_year.items()):
+        lines.append(f"- `{y}`: {c}")
+    lines += ["", "## Top Repos by Commit Records", ""]
+    for repo, c in by_repo.most_common(50):
+        lines.append(f"- `{repo}`: {c}")
+    lines += ["", "## Top Author Emails", ""]
+    for email, c in by_author.most_common(30):
+        lines.append(f"- `{email}`: {c}")
+    lines += ["", "## Recent Commits", ""]
+    for commit in sorted(commits, key=lambda c: c.get("committed_at") or "", reverse=True)[:80]:
+        refs = ", ".join((commit.get("refs") or [])[:5])
+        lines.append(f"- `{commit.get('committed_at')}` `{commit.get('repo')}` `{str(commit.get('sha') or '')[:12]}` — {commit.get('subject') or ''} ({refs})")
+    (reports / "commit-history.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_hermes_opportunities(reports: Path, repos: list[dict], prs: list[dict], issues: list[dict]) -> None:
     terms = Counter()
     source_examples: defaultdict[str, list[str]] = defaultdict(list)
@@ -178,12 +217,14 @@ def analyze(data: Path) -> dict[str, int]:
     prs_authored = read_jsonl(data / "raw" / "prs-authored.jsonl")
     prs_involved = read_jsonl(data / "raw" / "prs-involved.jsonl")
     issues_involved = read_jsonl(data / "raw" / "issues-involved.jsonl")
+    commits = read_jsonl(data / "raw" / "commits.jsonl")
     write_inventory(data, reports, repos, orgs)
     write_pr_timeline(reports, prs_authored, issues_involved)
     write_themes(reports, repos, prs_involved, issues_involved)
     write_dormant(reports, repos)
+    write_commit_history(reports, commits)
     write_hermes_opportunities(reports, repos, prs_involved, issues_involved)
-    return {"repos": len(repos), "orgs": len(orgs), "prs_authored": len(prs_authored), "prs_involved": len(prs_involved), "issues_involved": len(issues_involved)}
+    return {"repos": len(repos), "orgs": len(orgs), "prs_authored": len(prs_authored), "prs_involved": len(prs_involved), "issues_involved": len(issues_involved), "commits": len(commits)}
 
 
 def main() -> int:
