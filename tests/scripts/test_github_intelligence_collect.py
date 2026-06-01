@@ -1,4 +1,4 @@
-from scripts.github_intelligence_collect import build_search_query, partitioned_search_issues, redact, search_issues, write_jsonl
+from scripts.github_intelligence_collect import build_search_query, load_existing_jsonl, merge_unique, parse_github_reset, partitioned_search_issues, redact, search_issues, write_jsonl
 from scripts.github_intelligence_query import search
 
 
@@ -41,6 +41,15 @@ def test_partitioned_search_uses_simple_path_for_smoke(monkeypatch):
     rows = partitioned_search_issues("author:noidsoup is:pr", max_pages=1)
     assert rows == [{"id": 1, "html_url": "https://example.test/1"}]
     assert calls == [("author:noidsoup is:pr", 1, 100)]
+
+
+def test_resume_helpers_merge_and_parse_reset(tmp_path):
+    path = tmp_path / "rows.jsonl"
+    write_jsonl(path, [{"id": 1, "title": "old"}])
+    existing = load_existing_jsonl(path)
+    merged = merge_unique(existing, [{"id": 1, "title": "old duplicate"}, {"id": 2, "title": "new"}])
+    assert [row["id"] for row in merged] == [1, 2]
+    assert parse_github_reset("timestamp 2026-06-01 04:30:36 UTC") == "2026-06-01T04:30:36+00:00"
 
 
 def test_write_jsonl_and_query(tmp_path):
