@@ -2,7 +2,7 @@
 title: Wiki Log
 type: log
 created: 2026-05-25
-updated: 2026-05-28
+updated: 2026-05-31
 ---
 
 # Wiki Log
@@ -53,3 +53,7 @@ Ingested `docs/plans/2026-05-07-s6-overlay-dynamic-subagent-gateways.md` as sour
 - `il-community-hunter`: 600s script cap; successful runs ~9–10 min. Raised `cron.script_timeout_seconds` to 900; wrapper defaults `IL_STATES_PER_RUN=1`, `IL_MAX_QUERIES=2`.
 - Nous API 401s in errors.log (portal credits); memory store at 2200-char cap — trim before adds.
 - `maintain_project_knowledge.py`: wiki lint OK, SimpleMem synced 5 entries. Curator deferred (7d interval).
+
+## [2026-05-31] create | Memory oracle pilot
+
+Added a MeMo-inspired reflection QA memory oracle pilot: `scripts/generate_reflections.py`, `scripts/query_memory_oracle.py`, `wiki/concepts/memory-oracle.md`, and generated `wiki/memory/reflections.jsonl`. This is a source-linked semantic memory layer for stable Hermes knowledge, not model fine-tuning.
