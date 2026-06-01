@@ -12,10 +12,10 @@ import json
 import os
 import re
 import subprocess
-from urllib.parse import quote
 import sys
 import time
 from datetime import datetime, timezone
+from urllib.parse import quote
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -55,6 +55,56 @@ def gh_json(args: list[str], timeout: int = 120) -> Any:
     return json.loads(out)
 
 
+def iso_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def parse_github_reset(error_text: str) -> str | None:
+    """Return a UTC ISO reset hint parsed from GitHub/gh rate-limit errors."""
+    match = re.search(r"timestamp ([0-9-]{10} [0-9:]{8}) UTC", error_text)
+    if match:
+        return datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).isoformat()
+    match = re.search(r"x-ratelimit-reset:\s*(\d+)", error_text, flags=re.I)
+    if match:
+        return datetime.fromtimestamp(int(match.group(1)), tz=timezone.utc).isoformat()
+    return None
+
+
+def atomic_write_jsonl(path: Path, rows: Iterable[Any]) -> int:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    count = write_jsonl(tmp, rows)
+    tmp.replace(path)
+    return count
+
+
+def load_existing_jsonl(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    rows: list[dict] = []
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(obj, dict):
+                rows.append(obj)
+    return rows
+
+
+def merge_unique(existing: Iterable[dict], new_rows: Iterable[dict]) -> list[dict]:
+    seen: set[str] = set()
+    merged: list[dict] = []
+    for item in [*existing, *new_rows]:
+        key = str(item.get("id") or item.get("node_id") or item.get("html_url") or json.dumps(item, sort_keys=True))
+        if key not in seen:
+            seen.add(key)
+            merged.append(item)
+    return merged
+
+
 def ensure_layout(out: Path) -> None:
     for rel in ["raw", "state", "reports", "index"]:
         (out / rel).mkdir(parents=True, exist_ok=True)
@@ -84,7 +134,7 @@ def write_jsonl(path: Path, rows: Iterable[Any]) -> int:
 
 
 def append_error(out: Path, stage: str, error: Exception | str) -> None:
-    rec = {"stage": stage, "error": str(error), "at": datetime.now(timezone.utc).isoformat()}
+    rec = {"stage": stage, "error": str(error), "at": iso_now(), "reset_hint": parse_github_reset(str(error))}
     with (out / "state" / "errors.jsonl").open("a", encoding="utf-8") as f:
         f.write(json.dumps(redact(rec), sort_keys=True) + "\n")
 
@@ -180,9 +230,9 @@ def partitioned_search_issues(base_query: str, max_pages: int | None = None, per
     return rows
 
 
-def collect(out: Path, max_pages: int | None = None, since: str | None = None) -> dict[str, Any]:
+def collect(out: Path, max_pages: int | None = None, since: str | None = None, resume: bool = True) -> dict[str, Any]:
     ensure_layout(out)
-    manifest: dict[str, Any] = {"started_at": datetime.now(timezone.utc).isoformat(), "out": str(out), "files": {}, "errors": []}
+    manifest: dict[str, Any] = {"started_at": iso_now(), "out": str(out), "files": {}, "errors": [], "resume": resume}
 
     print("checking gh auth...", flush=True)
     rc, auth_out, auth_err = run_gh(["auth", "status"], timeout=60)
@@ -205,7 +255,8 @@ def collect(out: Path, max_pages: int | None = None, since: str | None = None) -
         try:
             print(f"collecting {name}...", flush=True)
             rows = fn()
-            manifest["files"][str(path)] = write_jsonl(path, rows)
+            merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
+            manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
         except Exception as exc:
             append_error(out, name, exc)
             manifest["errors"].append({"stage": name, "error": str(exc)})
@@ -221,12 +272,13 @@ def collect(out: Path, max_pages: int | None = None, since: str | None = None) -
         try:
             print(f"collecting {name}: {query}", flush=True)
             rows = partitioned_search_issues(query, max_pages=max_pages)
-            manifest["files"][str(path)] = write_jsonl(path, rows)
+            merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
+            manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
         except Exception as exc:
             append_error(out, name, exc)
             manifest["errors"].append({"stage": name, "error": str(exc)})
 
-    manifest["finished_at"] = datetime.now(timezone.utc).isoformat()
+    manifest["finished_at"] = iso_now()
     write_json(out / "state" / "manifest.json", manifest)
     return manifest
 
@@ -236,8 +288,9 @@ def main() -> int:
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     parser.add_argument("--max-pages", type=int, default=None, help="Limit pages per paginated collection/search for smoke tests")
     parser.add_argument("--since", default=None, help="Only search PR/issues updated on/after YYYY-MM-DD")
+    parser.add_argument("--no-resume", action="store_true", help="Overwrite stage files instead of merging with existing JSONL records")
     args = parser.parse_args()
-    manifest = collect(Path(args.out).expanduser().resolve(), max_pages=args.max_pages, since=args.since)
+    manifest = collect(Path(args.out).expanduser().resolve(), max_pages=args.max_pages, since=args.since, resume=not args.no_resume)
     print(json.dumps(manifest, indent=2, ensure_ascii=False))
     return 0 if not manifest.get("errors") else 1
 
