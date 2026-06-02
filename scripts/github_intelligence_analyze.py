@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -199,10 +200,10 @@ def write_hermes_opportunities(reports: Path, repos: list[dict], prs: list[dict]
         "",
         "## Recommended Hermes Improvements",
         "",
-        "1. Add a `github_history_query` local-only tool so Hermes can search Nicholas's prior repos/PRs before implementing new work.",
-        "2. Generate source-linked skills from repeated workflows found in PRs, especially automation, bots, GitHub Actions, Airtable, and agent tooling.",
-        "3. Add a revival queue: old non-archived repos with AI/automation/bot/search terms get triaged for reuse in Hermes/APFS.",
-        "4. Add repo convention profiles: infer stack/test/build conventions per repo and use them before coding.",
+        "1. Use `github_history_query` (local vault tool) before repo/dev/automation tasks — already shipped in Hermes.",
+        "2. Run `scripts/github_intelligence_digest.py` after collection to refresh skill-candidates, repo-conventions, and revival-queue reports.",
+        "3. Promote abstract skills from `reports/skill-candidates.md` after review — do not copy private code.",
+        "4. Use `reports/repo-conventions.md` as orientation, then verify against live repo files.",
         "5. Keep private org details local; promote only abstract durable preferences after review.",
         "",
     ]
@@ -227,11 +228,42 @@ def analyze(data: Path) -> dict[str, int]:
     return {"repos": len(repos), "orgs": len(orgs), "prs_authored": len(prs_authored), "prs_involved": len(prs_involved), "issues_involved": len(issues_involved), "commits": len(commits)}
 
 
+def _run_digest(data: Path) -> dict | None:
+    """Refresh derived Hermes-facing reports (skill candidates, revival queue, etc.)."""
+    digest_script = Path(__file__).with_name("github_intelligence_digest.py")
+    if not digest_script.is_file():
+        return None
+    import subprocess
+
+    proc = subprocess.run(
+        [sys.executable, str(digest_script), "--data", str(data)],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        return {"ok": False, "stderr": proc.stderr[-500:]}
+    try:
+        return json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return {"ok": True, "stdout": proc.stdout[-500:]}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", default=str(DEFAULT_DATA))
+    parser.add_argument(
+        "--skip-digest",
+        action="store_true",
+        help="Skip github_intelligence_digest.py (skill candidates, revival queue, etc.)",
+    )
     args = parser.parse_args()
-    result = analyze(Path(args.data).expanduser().resolve())
+    data = Path(args.data).expanduser().resolve()
+    result = analyze(data)
+    if not args.skip_digest:
+        digest = _run_digest(data)
+        if digest is not None:
+            result["digest"] = digest
     print(json.dumps(result, indent=2))
     return 0
 
