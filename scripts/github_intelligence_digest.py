@@ -140,13 +140,20 @@ def main():
     for p in profiles[:10]: digest.append(f"- `{p['repo']}` — {p['language']}, confidence {p['confidence']}, terms: {', '.join(p['top_terms'][:5])}")
     digest += ["", "## Top revival candidates", ""]
     for p in revival[:10]: digest.append(f"- `{p['repo']}` — score {p['reuse_score']}, {p['language']}, pushed {p.get('pushed_at') or 'unknown'}")
+    commit_workflows = read_json(state/"commit-workflows.json")
+    workflow_rows = commit_workflows.get("workflows") or []
+    if workflow_rows:
+        digest += ["", "## Top commit workflow clusters", ""]
+        for wf in workflow_rows[:8]:
+            if wf.get("count"):
+                digest.append(f"- `{wf.get('key')}` — {wf.get('count')} commits; top repos: {', '.join(r for r,_ in (wf.get('top_repos') or [])[:3])}")
     write_md(reports/"weekly-digest.md", digest)
-    index={"generated_at":now(),"data_dir":str(data),"counts":{"repos":len(repos),"prs_involved":len(prs_i),"prs_authored":len(prs_a),"issues":len(issues),"commits":len(commits)},"preflight_policy":{"when":"Before repo/dev/automation work when prior Nicholas patterns may matter","queries":["<repo name> conventions tests deploy", "<topic> automation workflow", "<error message or library>"],"privacy":"Keep raw private details local; promote only abstract procedures."},"top_skill_candidates":skill_rows[:12],"top_repo_profiles":profiles[:30],"top_revival_candidates":revival[:30],"report_paths":[str(reports/n) for n in ["repo-conventions.md","skill-candidates.md","revival-queue.md","weekly-digest.md"]]}
+    index={"generated_at":now(),"data_dir":str(data),"counts":{"repos":len(repos),"prs_involved":len(prs_i),"prs_authored":len(prs_a),"issues":len(issues),"commits":len(commits)},"preflight_policy":{"when":"Before repo/dev/automation work when prior Nicholas patterns may matter","queries":["<repo name> conventions tests deploy", "<topic> automation workflow", "<error message or library>"],"privacy":"Keep raw private details local; promote only abstract procedures."},"top_skill_candidates":skill_rows[:12],"top_repo_profiles":profiles[:30],"top_revival_candidates":revival[:30],"top_commit_workflows":workflow_rows[:12],"report_paths":[str(reports/n) for n in ["repo-conventions.md","skill-candidates.md","revival-queue.md","weekly-digest.md","commit-workflows.md"]]}
     (state/"hermes-preflight-index.json").write_text(json.dumps(index, indent=2, ensure_ascii=False), encoding="utf-8")
     readme=data/"README.md"
     existing=readme.read_text(encoding="utf-8") if readme.exists() else "# GitHub Intelligence Vault\n"
     marker="\n## Hermes Active-Use Runbook\n"
-    runbook=marker+"\nThis vault is local/private and is used as Hermes's engineering memory for Nicholas's GitHub work.\n\nGenerated products:\n\n- `reports/repo-conventions.md` — inferred repo orientations; verify against live files.\n- `reports/skill-candidates.md` — repeated workflows to turn into abstract skills.\n- `reports/revival-queue.md` — projects/components worth revisiting.\n- `reports/weekly-digest.md` — concise summary for review.\n- `state/hermes-preflight-index.json` — machine-readable preflight index.\n\nOperational rule: before meaningful repo/dev/automation work, query `github_history_query` with the repo/topic/error. Do not copy private code into memory or skills.\n"
+    runbook=marker+"\nThis vault is local/private and is used as Hermes's engineering memory for Nicholas's GitHub work.\n\nGenerated products:\n\n- `reports/repo-conventions.md` — inferred repo orientations; verify against live files.\n- `reports/skill-candidates.md` — repeated workflows to turn into abstract skills.\n- `reports/revival-queue.md` — projects/components worth revisiting.\n- `reports/commit-workflows.md` — commit-derived workflow clusters and repo playbook seeds.\n- `reports/weekly-digest.md` — concise summary for review.\n- `state/hermes-preflight-index.json` — machine-readable preflight index.\n\nOperational rule: before meaningful repo/dev/automation work, query `github_history_query` with the repo/topic/error. Do not copy private code into memory or skills.\n"
     if marker in existing: existing=existing.split(marker)[0].rstrip()+"\n"+runbook
     else: existing=existing.rstrip()+"\n"+runbook
     readme.write_text(existing, encoding="utf-8")

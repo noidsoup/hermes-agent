@@ -175,22 +175,126 @@ def build_search_query(kind: str, login: str, relation: str, since: str | None =
     return q
 
 
+class RateLimitExhausted(RuntimeError):
+    """Raised when retry-on-rate-limit budget is exhausted (or the reset window
+    is unreasonably far in the future). The caller (`collect()`) catches this
+    in its `try/except` around `partitioned_search_issues()` and writes a
+    record to `state/errors.jsonl` via `append_error`, so partial failures
+    are visible in the manifest and the health check rather than silently
+    producing a year with incomplete data.
+
+    When raised from `partitioned_search_issues`, `partial_rows` carries
+    whatever rows were collected from successful year-partitions before the
+    failure. The caller should merge these with on-disk data (via
+    `merge_unique`) so a single bad year doesn't lose the other years'
+    progress — the next run will fill in the rest.
+    """
+    def __init__(self, msg: str, partial_rows: list | None = None):
+        super().__init__(msg)
+        self.partial_rows = partial_rows or []
+
+
+def _wait_for_rate_reset(err_text: str, attempt: int) -> float:
+    """Return seconds to sleep before retrying after a rate-limit error.
+
+    Tries (in order):
+      1. x-ratelimit-reset: <unix-ts>  → sleep until then (+2s buffer)
+      2. timestamp YYYY-MM-DD HH:MM:SS UTC → same
+      3. exponential backoff capped at 120s: 2^attempt + jitter
+
+    Raises RateLimitExhausted immediately if the parsed reset window is
+    unreasonably far in the future (>10 min). Retrying into such a window
+    would just busy-loop against the same cap and burn the retry budget.
+    Failing fast lets the caller surface the error and try again on the
+    next scheduled run, by which time the window is more likely open.
+    """
+    reset_iso = parse_github_reset(err_text)
+    if reset_iso:
+        try:
+            from datetime import datetime as _dt
+            reset_dt = _dt.fromisoformat(reset_iso)
+            now = datetime.now(timezone.utc)
+            wait = (reset_dt - now).total_seconds()
+            # If the window is far in the future, don't bother retrying.
+            # Caller surfaces the error; next cron tick can try again.
+            if wait > 600:
+                raise RateLimitExhausted(
+                    f"rate limit reset is {wait:.0f}s away; not retrying this run"
+                )
+            # If the window is already in the past, the server gave us stale
+            # info (or we lost a race). A short sleep + retry may work, but
+            # sleeping 2s blindly burns the budget; fall through to backoff
+            # which at least grows exponentially.
+            if wait <= 0:
+                # fall through to backoff below
+                raise StopIteration  # local control flow, caught below
+            # 0 < wait <= 600: honor the window, with a small buffer.
+            return wait + 2.0
+        except RateLimitExhausted:
+            raise
+        except StopIteration:
+            pass
+        except Exception:
+            pass
+    # exponential backoff with jitter
+    base = min(120.0, 2 ** min(attempt, 7))  # 2,4,8,16,32,64,120,120
+    jitter = base * 0.2 * (0.5 - (time.time() % 1))  # ±10%
+    return max(2.0, base + jitter)
+
+
 def search_issues(query: str, max_pages: int | None = None, per_page: int = 100) -> list[dict]:
+    """Search issues/PRs with retry-on-rate-limit.
+
+    On 422 (1000-result cap) we stop — that partition is done.
+    On 429 / "rate limit exceeded" / "secondary rate limit" we wait for the
+    reset window (or back off) and retry the same page, up to MAX_RETRIES
+    times. If retries are exhausted, raises RateLimitExhausted so the
+    caller can record the partial failure (the function returns nothing
+    in that case — partial rows are lost, which is the correct trade-off
+    when a year is incomplete: the next run will resume from disk via
+    merge_unique and the user sees the failure in errors.jsonl).
+
+    Note: the retry budget is per-page, not per-call. A 100-page call that
+    rate-limits on every other page will use up to MAX_RETRIES sleeps per
+    rate-limited page. This is intentional — a global cap of 5 would mean
+    a single bad page could abort 99 successful pages of work.
+    """
+    MAX_RETRIES = 5
     rows: list[dict] = []
     page = 1
+    retries_left = MAX_RETRIES
     while True:
         endpoint = f"search/issues?q={quote(query)}&per_page={per_page}&page={page}"
         try:
             data = gh_json(["api", endpoint], timeout=180)
+        except RateLimitExhausted as exc:
+            # Fail fast: window too far in the future. Carry the rows we
+            # already collected from successful pages so the caller can
+            # preserve them (a year with 6 of 7 pages is still better
+            # than 0 of 7).
+            raise RateLimitExhausted(str(exc), partial_rows=rows) from exc
         except RuntimeError as exc:
             msg = str(exc)
             if "Only the first 1000 search results are available" in msg:
                 print(f"  search cap reached at page {page}; keeping {len(rows)} partial results ({query})", flush=True)
                 break
             if "API rate limit exceeded" in msg or "secondary rate limit" in msg.lower():
-                print(f"  search rate limit hit at page {page}; keeping {len(rows)} partial results ({query})", flush=True)
-                break
+                if retries_left <= 0:
+                    raise RateLimitExhausted(
+                        f"rate limit retries exhausted at page {page} of query '{query}' "
+                        f"after {MAX_RETRIES} retries; surfacing to caller with {len(rows)} "
+                        f"rows from successful pages",
+                        partial_rows=rows,
+                    )
+                attempt = MAX_RETRIES - retries_left + 1
+                wait = _wait_for_rate_reset(msg, attempt)
+                print(f"  search rate limit hit at page {page} (attempt {attempt}/{MAX_RETRIES}); sleeping {wait:.1f}s then retrying", flush=True)
+                time.sleep(wait)
+                retries_left -= 1
+                continue
             raise
+        # success — refill retry budget, accept results
+        retries_left = MAX_RETRIES
         items = data.get("items", []) if isinstance(data, dict) else []
         rows.extend(items)
         print(f"  search page {page}: {len(items)} items ({query})", flush=True)
@@ -207,6 +311,14 @@ def partitioned_search_issues(base_query: str, max_pages: int | None = None, per
     GitHub Search only exposes the first 1000 results for a query. For full runs,
     split broad PR/issue queries by updated year. Smoke tests (`max_pages`) keep
     the simple one-query behavior for speed.
+
+    If individual year-partitions raise RateLimitExhausted mid-partition, the
+    partial rows for that year are discarded (we don't return incomplete years
+    to the caller — better to record the failure and let the next run resume
+    from disk). A per-year error is recorded; the loop continues to the next
+    year so a single bad year doesn't block the rest. After all years, if any
+    year was partial, raises a single RateLimitExhausted with a summary so the
+    outer caller's `try/except` records it in `state/errors.jsonl`.
     """
     if max_pages:
         return search_issues(base_query, max_pages=max_pages, per_page=per_page)
@@ -217,9 +329,16 @@ def partitioned_search_issues(base_query: str, max_pages: int | None = None, per
     ranges.append("updated:<2008-01-01")
     seen: set[str] = set()
     rows: list[dict] = []
+    partial_years: list[str] = []
     for qualifier in ranges:
         query = f"{base_query} {qualifier}"
-        part = search_issues(query, max_pages=None, per_page=per_page)
+        try:
+            part = search_issues(query, max_pages=None, per_page=per_page)
+        except RateLimitExhausted as exc:
+            print(f"  partition {qualifier} partial: {exc}; continuing to next year", flush=True)
+            partial_years.append(qualifier)
+            time.sleep(2.2)
+            continue
         print(f"  partition {qualifier}: {len(part)} items", flush=True)
         for item in part:
             key = str(item.get("id") or item.get("node_id") or item.get("html_url"))
@@ -227,6 +346,15 @@ def partitioned_search_issues(base_query: str, max_pages: int | None = None, per
                 seen.add(key)
                 rows.append(item)
         time.sleep(2.2)
+    if partial_years:
+        raise RateLimitExhausted(
+            f"{len(partial_years)} year-partition(s) had partial failures "
+            f"({len(rows)} complete items collected from other years, "
+            f"carried in exc.partial_rows for the caller to merge): "
+            f"{', '.join(partial_years[:5])}"
+            f"{' ...' if len(partial_years) > 5 else ''}",
+            partial_rows=rows,
+        )
     return rows
 
 
@@ -269,14 +397,26 @@ def collect(out: Path, max_pages: int | None = None, since: str | None = None, r
         ("issues-involved", build_search_query("issue", login, "involved", since), out / "raw" / "issues-involved.jsonl"),
     ]
     for name, query, path in searches:
+        rows: list = []
         try:
             print(f"collecting {name}: {query}", flush=True)
             rows = partitioned_search_issues(query, max_pages=max_pages)
-            merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
-            manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
+        except RateLimitExhausted as exc:
+            # Partial failure: record the error (so it's visible in
+            # manifest + health card) AND keep any rows from successful
+            # year-partitions so they're merged with on-disk data. Next
+            # run will fill in the missing year(s).
+            append_error(out, name, exc)
+            manifest["errors"].append({"stage": name, "error": str(exc)})
+            rows = list(exc.partial_rows) if exc.partial_rows else []
+            print(f"  {name}: keeping {len(rows)} partial rows from successful years; "
+                  f"will continue on next run", flush=True)
         except Exception as exc:
             append_error(out, name, exc)
             manifest["errors"].append({"stage": name, "error": str(exc)})
+            rows = []
+        merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
+        manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
 
     manifest["finished_at"] = iso_now()
     write_json(out / "state" / "manifest.json", manifest)

@@ -228,18 +228,18 @@ def analyze(data: Path) -> dict[str, int]:
     return {"repos": len(repos), "orgs": len(orgs), "prs_authored": len(prs_authored), "prs_involved": len(prs_involved), "issues_involved": len(issues_involved), "commits": len(commits)}
 
 
-def _run_digest(data: Path) -> dict | None:
-    """Refresh derived Hermes-facing reports (skill candidates, revival queue, etc.)."""
-    digest_script = Path(__file__).with_name("github_intelligence_digest.py")
-    if not digest_script.is_file():
+def _run_script(data: Path, script_name: str, timeout: int = 120) -> dict | None:
+    """Run a derived-report script and return its JSON-ish status."""
+    script = Path(__file__).with_name(script_name)
+    if not script.is_file():
         return None
     import subprocess
 
     proc = subprocess.run(
-        [sys.executable, str(digest_script), "--data", str(data)],
+        [sys.executable, str(script), "--data", str(data)],
         capture_output=True,
         text=True,
-        timeout=120,
+        timeout=timeout,
     )
     if proc.returncode != 0:
         return {"ok": False, "stderr": proc.stderr[-500:]}
@@ -247,6 +247,16 @@ def _run_digest(data: Path) -> dict | None:
         return json.loads(proc.stdout)
     except json.JSONDecodeError:
         return {"ok": True, "stdout": proc.stdout[-500:]}
+
+
+def _run_digest(data: Path) -> dict | None:
+    """Refresh derived Hermes-facing reports (skill candidates, revival queue, etc.)."""
+    return _run_script(data, "github_intelligence_digest.py", timeout=120)
+
+
+def _run_commit_workflows(data: Path) -> dict | None:
+    """Refresh commit-derived workflow classifier reports."""
+    return _run_script(data, "github_intelligence_commit_workflows.py", timeout=120)
 
 
 def main() -> int:
@@ -257,6 +267,11 @@ def main() -> int:
         action="store_true",
         help="Skip github_intelligence_digest.py (skill candidates, revival queue, etc.)",
     )
+    parser.add_argument(
+        "--skip-commit-workflows",
+        action="store_true",
+        help="Skip github_intelligence_commit_workflows.py (commit workflow classifier)",
+    )
     args = parser.parse_args()
     data = Path(args.data).expanduser().resolve()
     result = analyze(data)
@@ -264,6 +279,10 @@ def main() -> int:
         digest = _run_digest(data)
         if digest is not None:
             result["digest"] = digest
+    if not args.skip_commit_workflows:
+        commit_workflows = _run_commit_workflows(data)
+        if commit_workflows is not None:
+            result["commit_workflows"] = commit_workflows
     print(json.dumps(result, indent=2))
     return 0
 
