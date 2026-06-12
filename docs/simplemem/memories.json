@@ -980,5 +980,605 @@
     },
     "namespace": "hermes-agent",
     "timestamp": 1780309845.774931
+  },
+  {
+    "id": "local_1780396251532",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780396251.532556
+  },
+  {
+    "id": "local_1780396251533",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780396251.533354
+  },
+  {
+    "id": "local_1780396251533",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780396251.533942
+  },
+  {
+    "id": "local_1780396251534",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780396251.5345201
+  },
+  {
+    "id": "local_1780396251535",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780396251.5350661
+  },
+  {
+    "id": "local_1780482677444",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780482677.444448
+  },
+  {
+    "id": "local_1780482677445",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780482677.4450078
+  },
+  {
+    "id": "local_1780482677445",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780482677.445448
+  },
+  {
+    "id": "local_1780482677445",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780482677.445885
+  },
+  {
+    "id": "local_1780482677446",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780482677.446305
+  },
+  {
+    "id": "local_1780569045950",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780569045.950869
+  },
+  {
+    "id": "local_1780569045951",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780569045.951421
+  },
+  {
+    "id": "local_1780569045951",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780569045.951877
+  },
+  {
+    "id": "local_1780569045952",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780569045.952387
+  },
+  {
+    "id": "local_1780569045952",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780569045.9528341
+  },
+  {
+    "id": "local_1780655484240",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780655484.2405288
+  },
+  {
+    "id": "local_1780655484241",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780655484.241305
+  },
+  {
+    "id": "local_1780655484241",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780655484.241766
+  },
+  {
+    "id": "local_1780655484242",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780655484.2422311
+  },
+  {
+    "id": "local_1780655484243",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780655484.2430289
+  },
+  {
+    "id": "local_1780741877030",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780741877.0306182
+  },
+  {
+    "id": "local_1780741877031",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780741877.031295
+  },
+  {
+    "id": "local_1780741877032",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780741877.03201
+  },
+  {
+    "id": "local_1780741877032",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780741877.032747
+  },
+  {
+    "id": "local_1780741877033",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780741877.033389
+  },
+  {
+    "id": "local_1780828244535",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780828244.5353549
+  },
+  {
+    "id": "local_1780828244536",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780828244.5362592
+  },
+  {
+    "id": "local_1780828244536",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780828244.536791
+  },
+  {
+    "id": "local_1780828244537",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780828244.537324
+  },
+  {
+    "id": "local_1780828244537",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780828244.537945
+  },
+  {
+    "id": "local_1780914651187",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780914651.187608
+  },
+  {
+    "id": "local_1780914651188",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780914651.18825
+  },
+  {
+    "id": "local_1780914651188",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780914651.188799
+  },
+  {
+    "id": "local_1780914651189",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780914651.189332
+  },
+  {
+    "id": "local_1780914651189",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1780914651.1898618
+  },
+  {
+    "id": "local_1781001055758",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781001055.758284
+  },
+  {
+    "id": "local_1781001055758",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781001055.758962
+  },
+  {
+    "id": "local_1781001055759",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781001055.759528
+  },
+  {
+    "id": "local_1781001055760",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781001055.760129
+  },
+  {
+    "id": "local_1781001055760",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781001055.760703
+  },
+  {
+    "id": "local_1781087459270",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781087459.27052
+  },
+  {
+    "id": "local_1781087459271",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781087459.27129
+  },
+  {
+    "id": "local_1781087459271",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781087459.27194
+  },
+  {
+    "id": "local_1781087459272",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781087459.272574
+  },
+  {
+    "id": "local_1781087459273",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781087459.273171
+  },
+  {
+    "id": "local_1781173871822",
+    "text": "Wiki session: Nightly self-improvement (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781173871.822367
+  },
+  {
+    "id": "local_1781173871823",
+    "text": "Wiki maintain: Wiki auto-commit policy (2026-05-27)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-27",
+      "verb": "maintain",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781173871.823426
+  },
+  {
+    "id": "local_1781173871824",
+    "text": "Wiki session: Nightly self-improvement (2026-05-28)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-28",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781173871.824028
+  },
+  {
+    "id": "local_1781173871824",
+    "text": "Wiki session: Nightly self-improvement (2026-05-29)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-29",
+      "verb": "session",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781173871.824638
+  },
+  {
+    "id": "local_1781173871825",
+    "text": "Wiki create: Memory oracle pilot (2026-05-31)",
+    "metadata": {
+      "type": "wiki_log",
+      "date": "2026-05-31",
+      "verb": "create",
+      "source": "maintain_project_knowledge"
+    },
+    "namespace": "hermes-agent",
+    "timestamp": 1781173871.825242
   }
 ]

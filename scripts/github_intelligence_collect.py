@@ -27,6 +27,44 @@ TOKEN_PATTERNS = [
     re.compile(r"(?i)(api[_-]?key|token|secret|password|passwd)(\s*[:=]\s*)(['\"]?)[^\s'\"]{6,}(['\"]?)"),
 ]
 
+# Repos excluded from the local GitHub data vault. Reasons:
+#   - read-only access: shouldn't be auto-updated
+#   - not relevant to agent context
+# Format: "owner/name" (matches GitHub API `full_name` and `repository_url`'s
+# /repos/<owner>/<repo> suffix). Keep in sync with EXCLUDED_REPOS in the
+# ghembed script so the vector index stays consistent with the raw vault.
+EXCLUDED_REPOS = frozenset({
+    "onederful-finance/oneder",   # read-only — no auto PRs/commits/issues
+})
+
+
+def _repo_full_name_from_url(url: str) -> str:
+    """Extract 'owner/name' from a GitHub API URL like
+    'https://api.github.com/repos/owner/name' or '.../repos/owner/name/issues/1'.
+    Returns '' if it doesn't match."""
+    if not url:
+        return ""
+    marker = "/repos/"
+    if marker in url:
+        tail = url.split(marker, 1)[1].strip("/")
+        # Take just owner/name (first two path segments); ignore /issues/N, /pulls/N, etc.
+        parts = tail.split("/")
+        if len(parts) >= 2:
+            return f"{parts[0]}/{parts[1]}"
+    return ""
+
+
+def _is_excluded(d: dict) -> bool:
+    """True if a GitHub API row references an excluded repo (PR/issue/repo/etc)."""
+    # Repos list: has `full_name`. PR/issue: has `repository_url`.
+    # Commit records (collected from local clones) have a top-level `repo` field.
+    name = (
+        d.get("full_name")
+        or d.get("repo")
+        or _repo_full_name_from_url(d.get("repository_url", ""))
+    )
+    return name in EXCLUDED_REPOS
+
 
 def redact(value: Any) -> Any:
     if isinstance(value, str):
@@ -383,6 +421,12 @@ def collect(out: Path, max_pages: int | None = None, since: str | None = None, r
         try:
             print(f"collecting {name}...", flush=True)
             rows = fn()
+            if name == "repos":
+                before = len(rows)
+                rows = [r for r in rows if not _is_excluded(r)]
+                skipped = before - len(rows)
+                if skipped:
+                    print(f"    excluded {skipped} repos in EXCLUDED_REPOS", flush=True)
             merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
             manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
         except Exception as exc:
@@ -415,6 +459,11 @@ def collect(out: Path, max_pages: int | None = None, since: str | None = None, r
             append_error(out, name, exc)
             manifest["errors"].append({"stage": name, "error": str(exc)})
             rows = []
+        before = len(rows)
+        rows = [r for r in rows if not _is_excluded(r)]
+        skipped = before - len(rows)
+        if skipped:
+            print(f"    excluded {skipped} rows in EXCLUDED_REPOS", flush=True)
         merged = merge_unique(load_existing_jsonl(path), rows) if resume else rows
         manifest["files"][str(path)] = atomic_write_jsonl(path, merged)
 
